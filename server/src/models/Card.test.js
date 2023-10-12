@@ -23,11 +23,23 @@ describe('Card', () => {
 
   /**
    * Create more tests
-   * E.g. check that the username of the created user is actually gandalf
+   * E.g. check that the name of the created card is actually Arcturus Spellweaver
    */
 
   test("card's name is Arcturus Spellweaver", async () => {
     expect(card.name).toBe("Arcturus Spellweaver")
+  })
+
+  test("card's mojo is a number ", async () => {
+    expect(typeof card.mojo).toBe("number")
+  })
+
+  test("card's stamina a number", async () => {
+    expect(typeof card.stamina).toBe("number")
+  })
+ 
+  test("card's url is a url", async () => {
+    expect(card.imgUrl).toBe("http://localhost:5000/img/arcturus-spellweaver.jpg")
   })
 
 

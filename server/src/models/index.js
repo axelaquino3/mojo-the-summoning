@@ -12,6 +12,18 @@ User.hasOne(Deck)
 Deck.belongsTo(User)
 
 
+// One to Many Relationship
+Deck.hasMany(Card)
+Card.belongsTo(Deck)
+
+
+
+//Many to Many Relationship
+Card.belongsToMany(Attack, {through: "card-attack"})
+Attack.belongsToMany(Card, {through: "card-attack"})
+
+
+
 
 // and then export them all below
 module.exports = { 
