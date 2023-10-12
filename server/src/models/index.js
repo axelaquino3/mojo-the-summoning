@@ -7,6 +7,12 @@ const { User } = require('./User')
 
 //set up the associations here
 
+// One to One Relationship
+User.hasOne(Deck)
+Deck.belongsTo(User)
+
+
+
 // and then export them all below
 module.exports = { 
     Attack,
