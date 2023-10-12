@@ -39,17 +39,18 @@ describe("Mojo Summoning Test", () => {
     
     //One to One Relationship Testing
     test("user has a deck", async () => {
+        
         // get a user
         const user1 = await User.findByPk(1)
+        
         // chose a deck
         const d1 = await Deck.findByPk(1)
+        
         // assign deck to a user
         await user1.setDeck(d1)
         const user1All = await User.findByPk(1, {
             include: Deck
         })
-        
-        console.log(JSON.stringify(user1All, null, 2))
 
         expect(user1All.Deck.name).toBe("snake pit")
     })
@@ -57,19 +58,56 @@ describe("Mojo Summoning Test", () => {
 
     // One to Many Relationship Testing
     
-    // test("", async () => {
+    test("Deck has many Cards", async () => {
         
-    // })
+        // get the Deck
+        const deck1 = await Deck.findByPk(1)
+        
+        // get the Card
+        const card1 = await Card.findByPk(1)
+        const card2 = await Card.findByPk(2)
+        
+        // Assign cards to deck
+        await deck1.setCards([card1, card2])
+        const deckCards = await deck1.getCards()
+
+        expect(deckCards[0].name).toBe("Arcturus Spellweaver")
+        expect(deckCards[1].name).toBe("Nimue Mistral")
+    })
 
    
 
     // Many to Many Relationship Testing
-    // test("", async () => {
-        
-    // })
+    
+    test("Card has many Attacks", async () => {
+        // Get card
+        const card1 = await Card.findByPk(1)
 
-    // test("", async () => {
+        // Get Attacks
+        const attack1 = await Attack.findByPk(1)
+        const attack2 = await Attack.findByPk(2)
+
+        // Set Attacks to Cards
+        await card1.setAttacks([attack1, attack2])
+
+        const card1All = await Card.findAll({
+            include: Attack
+        })
+
+        const cardAttacks = await card1.getAttacks()
+
+        console.log(JSON.stringify(cardAttacks, null, 2))
+
+        expect(cardAttacks[0].title).toBe("Sword")
+        expect(cardAttacks[1].title).toBe("Club")
+
+    })
+
+
+    test("Attacks may belong to Many Cards", () => {
         
-    // })
+    })
+
+    
 
 })
