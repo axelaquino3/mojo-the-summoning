@@ -35,7 +35,7 @@ describe("Mojo Summoning Test", () => {
     })
     
     // clear db after tests
-    // afterAll(async () => await db.sync({ force: true }))
+    afterAll(async () => await db.sync({ force: true }))
     
     //One to One Relationship Testing
     test("user has a deck", async () => {
@@ -75,8 +75,6 @@ describe("Mojo Summoning Test", () => {
         expect(deckCards[1].name).toBe("Nimue Mistral")
     })
 
-   
-
     // Many to Many Relationship Testing
     
     test("Card has many Attacks", async () => {
@@ -96,7 +94,7 @@ describe("Mojo Summoning Test", () => {
 
         const cardAttacks = await card1.getAttacks()
 
-        console.log(JSON.stringify(cardAttacks, null, 2))
+        // console.log(JSON.stringify(cardAttacks, null, 2))
 
         expect(cardAttacks[0].title).toBe("Sword")
         expect(cardAttacks[1].title).toBe("Club")
@@ -104,9 +102,60 @@ describe("Mojo Summoning Test", () => {
     })
 
 
-    test("Attacks may belong to Many Cards", () => {
-        
+    test("Attacks may belong to Many Cards", async () => {
+        // Get Attack
+        const attack1 = await Attack.findByPk(1)
+
+        // Get Cards
+        const card1 = await Card.findByPk(1)
+        const card2 = await Card.findByPk(2)
+
+        // Set Attacks to Cards
+        await attack1.setCards([card1, card2])
+        const attackCards = await attack1.getCards()
+
+    const allAttacks = await Attack.findAll({
+        include: Card
     })
+
+        
+        // console.log(JSON.stringify(allAttacks[0].Cards, null, 2))
+        
+        // attacks 
+        expect(allAttacks[0]).toBeInstanceOf(Attack)
+        // checking associations
+        expect(allAttacks[0].Cards[0]).toBeInstanceOf(Card)
+    })
+
+
+    // Eager Loading
+    test("User can be loaded with its Deck", async () => {
+        // get User
+        const user1 = await User.findByPk(1, {
+            include: Deck
+        })
+
+        expect(user1.Deck).toBeInstanceOf(Deck)
+    })
+
+    test("Deck can be loaded with its Cards", async () => {
+        // get User
+        const deck1 = await Deck.findByPk(1, {
+            include: Card
+        })
+
+        expect(deck1.Cards[0]).toBeInstanceOf(Card)
+    })
+
+    test("Card Can be loaded with Attacks", async () => {
+        
+        const card1 = await Card.findAll({
+            include: Attack
+        })
+        
+        expect(card1[0].Attacks[0]).toBeInstanceOf(Attack)
+    })
+    
 
     
 
